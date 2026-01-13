@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}О нас - Онлайн-конструктор портфолио{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-br from-indigo-50 via-white to-purple-50 min-h-screen fade-in-section">
+    <!-- Hero Section -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div class="text-center">
+            <h1 class="text-5xl font-extrabold text-gray-900 sm:text-6xl">
+                <span class="block">О нашей</span>
+                <span class="block text-indigo-600">платформе</span>
+            </h1>
+            <p class="mt-6 max-w-3xl mx-auto text-xl text-gray-600">
+                Мы создали простой и эффективный инструмент для создания профессиональных портфолио
+            </p>
+        </div>
+    </div>
+
+    <!-- Описание платформы -->
+    <div class="bg-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none">
+                <h2 class="text-4xl font-bold text-gray-900 mb-8">Описание платформы</h2>
+                <p class="text-xl text-gray-600 mb-6">
+                    Наша платформа — это современный онлайн-конструктор портфолио, созданный для того, 
+                    чтобы каждый профессионал мог легко и быстро представить свои работы в лучшем свете. 
+                    Мы понимаем, что не все имеют навыки программирования или дизайна, поэтому создали 
+                    инструмент, который делает создание портфолио доступным для всех.
+                </p>
+                <p class="text-xl text-gray-600">
+                    С помощью нашего конструктора вы можете создать уникальное портфолио, которое 
+                    отражает вашу индивидуальность и профессиональные достижения. Все это без необходимости 
+                    писать код или изучать сложные программы.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Услуги -->
+    <div class="bg-gradient-to-br from-indigo-50 to-purple-50 py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center text-gray-900 mb-12">Наши услуги</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+                    <div class="bg-indigo-100 w-16 h-16 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Создание портфолио</h3>
+                    <p class="text-gray-600">
+                        Интуитивный редактор позволяет создать портфолио с нуля или использовать готовые шаблоны
+                    </p>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+                    <div class="bg-purple-100 w-16 h-16 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Редактирование данных</h3>
+                    <p class="text-gray-600">
+                        Легко обновляйте информацию о себе, добавляйте новые работы и изменяйте дизайн в любое время
+                    </p>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+                    <div class="bg-pink-100 w-16 h-16 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Хостинг портфолио</h3>
+                    <p class="text-gray-600">
+                        Ваше портфолио автоматически размещается в интернете и доступно по уникальной ссылке
+                    </p>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+                    <div class="bg-green-100 w-16 h-16 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Готовые дизайны</h3>
+                    <p class="text-gray-600">
+                        Коллекция профессиональных шаблонов на любой вкус - от минималистичных до ярких и креативных
+                    </p>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+                    <div class="bg-yellow-100 w-16 h-16 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Администрирование</h3>
+                    <p class="text-gray-600">
+                        Удобная панель управления для контроля всех аспектов вашего портфолио
+                    </p>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+                    <div class="bg-blue-100 w-16 h-16 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Поддержка</h3>
+                    <p class="text-gray-600">
+                        Наша команда всегда готова помочь вам с любыми вопросами и проблемами
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Миссия -->
+    <div class="bg-indigo-600 py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center text-white">
+                <h2 class="text-4xl font-bold mb-8">Наша миссия</h2>
+                <p class="text-xl max-w-3xl mx-auto leading-relaxed">
+                    Мы верим, что каждый профессионал заслуживает иметь красивое и функциональное портфолио, 
+                    независимо от технических навыков. Наша миссия — сделать создание портфолио простым, 
+                    быстрым и доступным для всех. Мы стремимся помочь людям представить свои работы в лучшем 
+                    свете и достичь своих профессиональных целей.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="bg-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">Присоединяйтесь к нам</h2>
+            <p class="text-xl text-gray-600 mb-8">Начните создавать свое портфолио уже сегодня</p>
+            <a href="/create/" class="inline-flex items-center px-8 py-4 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 shadow-lg hover:shadow-xl transition duration-300">
+                Создать портфолио
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

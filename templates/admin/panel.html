@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Админ-панель - Онлайн-конструктор портфолио{% endblock %}
+
+{% block content %}
+<div class="bg-gray-50 min-h-screen py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 class="text-4xl font-bold text-gray-900 mb-8">Админ-панель</h1>
+        
+        <!-- Статистика -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex items-center">
+                    <div class="bg-indigo-100 p-3 rounded-lg mr-4">
+                        <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Пользователей</p>
+                        <p class="text-3xl font-bold text-gray-900">{{ users_count }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex items-center">
+                    <div class="bg-purple-100 p-3 rounded-lg mr-4">
+                        <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Портфолио</p>
+                        <p class="text-3xl font-bold text-gray-900">{{ portfolios_count }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex items-center">
+                    <div class="bg-pink-100 p-3 rounded-lg mr-4">
+                        <svg class="w-8 h-8 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Шаблонов</p>
+                        <p class="text-3xl font-bold text-gray-900">{{ templates_count }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Навигация -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <a href="/admin-panel/users/" class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition duration-300">
+                <div class="flex items-center mb-4">
+                    <div class="bg-indigo-100 p-3 rounded-lg mr-4">
+                        <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-900">Пользователи</h2>
+                </div>
+                <p class="text-gray-600">Просмотр и управление пользователями системы</p>
+            </a>
+            <a href="/admin-panel/portfolios/" class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition duration-300">
+                <div class="flex items-center mb-4">
+                    <div class="bg-purple-100 p-3 rounded-lg mr-4">
+                        <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-900">Портфолио</h2>
+                </div>
+                <p class="text-gray-600">Просмотр всех созданных портфолио</p>
+            </a>
+            <a href="/admin-panel/templates/" class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition duration-300">
+                <div class="flex items-center mb-4">
+                    <div class="bg-pink-100 p-3 rounded-lg mr-4">
+                        <svg class="w-8 h-8 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-900">Шаблоны</h2>
+                </div>
+                <p class="text-gray-600">Управление шаблонами портфолио</p>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Портфолио - Админ-панель{% endblock %}
+
+{% block content %}
+<div class="bg-gray-50 min-h-screen py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-900">Все портфолио</h1>
+            <a href="/admin-panel/" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400">
+                Назад
+            </a>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for portfolio in portfolios %}
+            <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition duration-300">
+                <div class="flex items-center mb-4">
+                    {% if portfolio.avatar %}
+                    <img src="{{ portfolio.avatar.url }}" alt="Avatar" class="w-12 h-12 rounded-full object-cover mr-3">
+                    {% else %}
+                    <div class="w-12 h-12 rounded-full bg-gray-200 mr-3"></div>
+                    {% endif %}
+                    <div>
+                        <h3 class="font-bold text-gray-900">{{ portfolio.name }}</h3>
+                        <p class="text-sm text-gray-600">{{ portfolio.user.email }}</p>
+                    </div>
+                </div>
+                {% if portfolio.template %}
+                <p class="text-sm text-gray-600 mb-2">Шаблон: {{ portfolio.template.name }}</p>
+                {% endif %}
+                {% if portfolio.description %}
+                <p class="text-sm text-gray-600 mb-4">{{ portfolio.description|truncatewords:15 }}</p>
+                {% endif %}
+                <p class="text-xs text-gray-500">Создано: {{ portfolio.created_at|date:"d.m.Y" }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

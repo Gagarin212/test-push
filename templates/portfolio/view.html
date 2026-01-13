@@ -1,0 +1,427 @@
+{% extends "base.html" %}
+
+{% block title %}Просмотр портфолио - Онлайн-конструктор портфолио{% endblock %}
+
+{% block extra_css %}
+<style>
+    .portfolio-view-page {
+        min-height: calc(100vh - 56px);
+        margin-top: 56px;
+        padding: 2rem;
+        background: #f9fafb;
+    }
+    
+    .portfolio-view-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+    }
+    
+    .view-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .view-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+    
+    .btn {
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        font-size: 0.875rem;
+        transition: all 0.2s;
+    }
+    
+    .btn-primary {
+        background: #4f46e5;
+        color: white;
+    }
+    
+    .btn-primary:hover {
+        background: #4338ca;
+    }
+    
+    .btn-secondary {
+        background: #6b7280;
+        color: white;
+    }
+    
+    .btn-secondary:hover {
+        background: #4b5563;
+    }
+    
+    /* Перенос текста для всех элементов */
+    .portfolio-view-page,
+    .portfolio-view-container,
+    #portfolio-content {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        overflow-x: hidden;
+        max-width: 100%;
+    }
+    
+    /* Перенос текста для текстовых элементов */
+    .portfolio-view-page *,
+    .portfolio-view-container *,
+    #portfolio-content * {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+    
+    /* Перенос длинных слов и URL */
+    .portfolio-view-page p,
+    .portfolio-view-page div,
+    .portfolio-view-page span,
+    .portfolio-view-page a,
+    .portfolio-view-page h1,
+    .portfolio-view-page h2,
+    .portfolio-view-page h3 {
+        word-break: break-word;
+        overflow-wrap: break-word;
+        hyphens: auto;
+    }
+    
+    /* Выравнивание изображений */
+    .portfolio-view-page img,
+    #portfolio-content img {
+        object-fit: cover;
+        object-position: center;
+        display: block;
+        vertical-align: middle;
+        max-width: 100%;
+        height: auto;
+    }
+    
+    /* Контейнеры для изображений */
+    .portfolio-view-page div[style*="flex"] img,
+    .portfolio-view-page div[style*="display: flex"] img,
+    #portfolio-content div[style*="flex"] img,
+    #portfolio-content div[style*="display: flex"] img {
+        align-self: center;
+    }
+    
+    /* Custom blocks responsive - stack on mobile */
+    @media (max-width: 768px) {
+        .portfolio-view-page .custom-block-grid,
+        #portfolio-content .custom-block-grid {
+            grid-template-columns: 1fr !important;
+        }
+        .portfolio-view-page .custom-block-image-area,
+        #portfolio-content .custom-block-image-area {
+            order: -1;
+        }
+        .portfolio-view-page .custom-block-image-area img,
+        #portfolio-content .custom-block-image-area img {
+            max-height: 180px !important;
+        }
+        .portfolio-view-page .custom-block-text-area,
+        #portfolio-content .custom-block-text-area {
+            padding-right: 0 !important;
+            padding-top: 12px;
+        }
+        .portfolio-view-page .custom-block-title,
+        #portfolio-content .custom-block-title {
+            font-size: calc(1em * 0.85) !important;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="portfolio-view-page">
+    <div class="portfolio-view-container">
+        <div class="view-header">
+            <h1 id="portfolio-title" class="text-2xl font-bold">Загрузка...</h1>
+            <div class="view-actions">
+                <button onclick="exportAsHTML()" class="btn btn-secondary">📥 Экспорт HTML</button>
+                <button onclick="exportAsPDF()" class="btn btn-secondary">📄 Экспорт PDF</button>
+                <a href="/create/?portfolio={{ portfolio_id }}" class="btn btn-primary">✏️ Редактировать</a>
+            </div>
+        </div>
+        <div id="portfolio-content">
+            <div class="text-center py-20">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
+                <p class="mt-4 text-gray-600">Загрузка портфолио...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/static/js/portfolio-service.js"></script>
+<script src="/static/js/portfolio-export.js"></script>
+<script src="/static/js/portfolio-renderer.js"></script>
+<script>
+const portfolioId = '{{ portfolio_id }}';
+
+document.addEventListener('DOMContentLoaded', async function() {
+    await loadPortfolio();
+});
+
+async function loadPortfolio() {
+    try {
+        const portfolio = window.portfolioService.getPortfolio(portfolioId);
+        if (!portfolio) {
+            document.getElementById('portfolio-content').innerHTML = `
+                <div class="text-center py-20">
+                    <p class="text-red-600">Портфолио не найдено</p>
+                    <a href="/portfolios/" class="text-indigo-600 hover:underline mt-4 inline-block">Вернуться к библиотеке</a>
+                </div>
+            `;
+            return;
+        }
+        
+        // Set title
+        document.getElementById('portfolio-title').textContent = portfolio.title;
+        
+        // Render portfolio using unified renderer
+        await renderPortfolio(portfolio);
+    } catch (error) {
+        console.error('Error loading portfolio:', error);
+        document.getElementById('portfolio-content').innerHTML = `
+            <div class="text-center py-20">
+                <p class="text-red-600">Ошибка загрузки портфолио</p>
+                <p class="text-gray-600 text-sm mt-2">${error.message}</p>
+            </div>
+        `;
+    }
+}
+
+async function renderPortfolio(portfolio) {
+    // Use unified renderer - same as preview
+    const state = portfolio.editorState || {};
+    const textFontFamily = state.textSettings?.fontFamily || 'Inter';
+    
+    // Load font if needed
+    await window.PortfolioRenderer.loadFont(textFontFamily);
+    
+    // Render HTML using unified renderer
+    const html = window.PortfolioRenderer.renderPortfolioHTML(portfolio);
+    
+    // Set content
+    document.getElementById('portfolio-content').innerHTML = html;
+}
+
+function renderBlock(block, state, colors) {
+    switch (block.type) {
+        case 'contacts':
+            return renderContacts(state, colors);
+        case 'skills':
+            return renderSkills(state, colors);
+        case 'experience':
+            return renderExperience(state, colors);
+        case 'education':
+            return renderEducation(state, colors);
+        case 'certificates':
+            return renderCertificates(state, colors);
+        case 'languages':
+            return renderLanguages(state, colors);
+        case 'works':
+            return renderWorks(state, colors);
+        default:
+            return '';
+    }
+}
+
+function renderContacts(state, colors) {
+    const contacts = state.contacts || {};
+    if (!contacts.phone && !contacts.email && !contacts.website) return '';
+    
+    let html = `<div style="margin-bottom: 3rem; padding: 2rem; background: #f9fafb; border-radius: 12px;">
+        <h2 style="font-size: 2rem; font-weight: 600; color: ${colors.primary_color || '#2563EB'}; margin-bottom: 1.5rem;">Контакты</h2>`;
+    if (contacts.phone) html += `<p style="margin: 0.5rem 0; font-size: 1.1rem;">📞 ${contacts.phone}</p>`;
+    if (contacts.email) html += `<p style="margin: 0.5rem 0; font-size: 1.1rem;">📧 ${contacts.email}</p>`;
+    if (contacts.website) html += `<p style="margin: 0.5rem 0; font-size: 1.1rem;">🌐 <a href="${contacts.website}" target="_blank" style="color: ${colors.accent_color || '#1E40AF'}; text-decoration: none;">${contacts.website}</a></p>`;
+    html += '</div>';
+    return html;
+}
+
+function renderSkills(state, colors) {
+    const skills = state.skills || [];
+    if (skills.length === 0) return '';
+    
+    let html = `<div style="margin-bottom: 3rem; padding: 2rem; background: #f9fafb; border-radius: 12px;">
+        <h2 style="font-size: 2rem; font-weight: 600; color: ${colors.primary_color || '#2563EB'}; margin-bottom: 1.5rem;">Навыки</h2>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.75rem;">`;
+    skills.forEach(skill => {
+        html += `<span style="padding: 0.75rem 1.5rem; background: ${colors.primary_color || '#2563EB'}; color: white; border-radius: 8px; font-weight: 500;">${skill}</span>`;
+    });
+    html += '</div></div>';
+    return html;
+}
+
+function renderExperience(state, colors) {
+    const experience = state.experience || [];
+    if (experience.length === 0) return '';
+    
+    let html = `<div style="margin-bottom: 3rem; padding: 2rem; background: #f9fafb; border-radius: 12px;">
+        <h2 style="font-size: 2rem; font-weight: 600; color: ${colors.primary_color || '#2563EB'}; margin-bottom: 1.5rem;">Опыт работы</h2>`;
+    experience.forEach(exp => {
+        html += `<div style="margin-bottom: 1.5rem; padding: 1.5rem; background: white; border-left: 4px solid ${colors.primary_color || '#2563EB'}; border-radius: 8px;">
+            <h3 style="font-size: 1.25rem; font-weight: 600; color: ${colors.primary_color || '#2563EB'}; margin-bottom: 0.5rem;">${exp.position || ''}</h3>
+            <p style="color: #6b7280; margin-bottom: 0.5rem;">${exp.company || ''} ${exp.period ? `• ${exp.period}` : ''}</p>
+            ${exp.description ? `<p style="color: #4b5563; line-height: 1.6; margin-top: 0.75rem;">${exp.description}</p>` : ''}
+        </div>`;
+    });
+    html += '</div>';
+    return html;
+}
+
+function renderEducation(state, colors) {
+    const education = state.education || [];
+    if (education.length === 0) return '';
+    
+    let html = `<div style="margin-bottom: 3rem; padding: 2rem; background: #f9fafb; border-radius: 12px;">
+        <h2 style="font-size: 2rem; font-weight: 600; color: ${colors.primary_color || '#2563EB'}; margin-bottom: 1.5rem;">Образование</h2>`;
+    education.forEach(edu => {
+        html += `<div style="margin-bottom: 1.5rem; padding: 1.5rem; background: white; border-left: 4px solid ${colors.primary_color || '#2563EB'}; border-radius: 8px;">
+            <h3 style="font-size: 1.25rem; font-weight: 600; color: ${colors.primary_color || '#2563EB'}; margin-bottom: 0.5rem;">${edu.institution || ''}</h3>
+            <p style="color: #6b7280; margin-bottom: 0.5rem;">${edu.specialty || ''} ${edu.period ? `• ${edu.period}` : ''}</p>
+            ${edu.description ? `<p style="color: #4b5563; line-height: 1.6; margin-top: 0.75rem;">${edu.description}</p>` : ''}
+        </div>`;
+    });
+    html += '</div>';
+    return html;
+}
+
+function renderCertificates(state, colors) {
+    const certificates = state.certificates || [];
+    if (certificates.length === 0) return '';
+    
+    let html = `<div style="margin-bottom: 3rem; padding: 2rem; background: #f9fafb; border-radius: 12px;">
+        <h2 style="font-size: 2rem; font-weight: 600; color: ${colors.primary_color || '#2563EB'}; margin-bottom: 1.5rem;">Сертификаты</h2>`;
+    certificates.forEach(cert => {
+        html += `<div style="margin-bottom: 1.5rem; padding: 1.5rem; background: white; border-left: 4px solid ${colors.primary_color || '#2563EB'}; border-radius: 8px;">
+            <h3 style="font-size: 1.25rem; font-weight: 600; color: ${colors.primary_color || '#2563EB'}; margin-bottom: 0.5rem;">${cert.name || ''}</h3>
+            <p style="color: #6b7280;">${cert.organization || ''} ${cert.date ? `• ${cert.date}` : ''}</p>
+            ${cert.link ? `<p style="margin-top: 0.5rem;"><a href="${cert.link}" target="_blank" style="color: ${colors.accent_color || '#1E40AF'}; text-decoration: none;">🔗 Ссылка</a></p>` : ''}
+        </div>`;
+    });
+    html += '</div>';
+    return html;
+}
+
+function renderLanguages(state, colors) {
+    const languages = state.languages || [];
+    if (languages.length === 0) return '';
+    
+    const levelNames = {
+        'beginner': 'Начальный',
+        'intermediate': 'Средний',
+        'advanced': 'Продвинутый',
+        'native': 'Родной'
+    };
+    
+    let html = `<div style="margin-bottom: 3rem; padding: 2rem; background: #f9fafb; border-radius: 12px;">
+        <h2 style="font-size: 2rem; font-weight: 600; color: ${colors.primary_color || '#2563EB'}; margin-bottom: 1.5rem;">Языки</h2>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.75rem;">`;
+    languages.forEach(lang => {
+        html += `<span style="padding: 0.75rem 1.5rem; background: ${colors.primary_color || '#2563EB'}; color: white; border-radius: 8px; font-weight: 500;">${lang.language} (${levelNames[lang.level] || lang.level})</span>`;
+    });
+    html += '</div></div>';
+    return html;
+}
+
+function renderWorks(state, colors) {
+    const items = state.items || [];
+    if (items.length === 0) return '';
+    
+    let html = `<div style="margin-bottom: 3rem; padding: 2rem; background: #f9fafb; border-radius: 12px;">
+        <h2 style="font-size: 2rem; font-weight: 600; color: ${colors.primary_color || '#2563EB'}; margin-bottom: 1.5rem;">Мои работы</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">`;
+    items.forEach(item => {
+        html += `<div style="background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            ${item.image ? `<img src="${item.image}" alt="${item.title}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 1rem;">` : ''}
+            <h3 style="font-size: 1.25rem; font-weight: 600; color: ${colors.primary_color || '#2563EB'}; margin-bottom: 0.5rem;">${item.title || ''}</h3>
+            ${item.description ? `<p style="color: #4b5563; line-height: 1.6;">${item.description}</p>` : ''}
+        </div>`;
+    });
+    html += '</div></div>';
+    return html;
+}
+
+async function exportAsHTML() {
+    try {
+        // Ensure we're using the same renderer
+        const portfolio = window.portfolioService.getPortfolio(portfolioId);
+        if (!portfolio) {
+            alert('Портфолио не найдено');
+            return;
+        }
+        
+        // Create a temporary preview container to use export service
+        const tempContainer = document.createElement('div');
+        tempContainer.id = 'portfolio-preview';
+        tempContainer.style.position = 'absolute';
+        tempContainer.style.left = '-9999px';
+        document.body.appendChild(tempContainer);
+        
+        // Render using unified renderer
+        const html = window.PortfolioRenderer.renderPortfolioHTML(portfolio);
+        tempContainer.innerHTML = html;
+        
+        // Wait for images
+        await window.portfolioExportService.waitForImages(tempContainer);
+        
+        // Export
+        await window.portfolioExportService.exportAsHTML(portfolioId);
+        
+        // Cleanup
+        document.body.removeChild(tempContainer);
+    } catch (error) {
+        console.error('Export error:', error);
+        alert('Ошибка при экспорте HTML: ' + error.message);
+    }
+}
+
+async function exportAsPDF() {
+    try {
+        // Ensure we're using the same renderer
+        const portfolio = window.portfolioService.getPortfolio(portfolioId);
+        if (!portfolio) {
+            alert('Портфолио не найдено');
+            return;
+        }
+        
+        // Create a temporary preview container to use export service
+        const tempContainer = document.createElement('div');
+        tempContainer.id = 'portfolio-preview';
+        tempContainer.style.position = 'absolute';
+        tempContainer.style.left = '-9999px';
+        document.body.appendChild(tempContainer);
+        
+        // Render using unified renderer
+        const html = window.PortfolioRenderer.renderPortfolioHTML(portfolio);
+        tempContainer.innerHTML = html;
+        
+        // Wait for images and fonts
+        await window.portfolioExportService.waitForImages(tempContainer);
+        const state = portfolio.editorState || {};
+        const fontFamily = state.textSettings?.fontFamily || 'Inter';
+        await window.PortfolioRenderer.loadFont(fontFamily);
+        
+        // Export
+        await window.portfolioExportService.exportAsPDF(portfolioId);
+        
+        // Cleanup
+        document.body.removeChild(tempContainer);
+    } catch (error) {
+        console.error('Export error:', error);
+        alert('Ошибка при экспорте PDF: ' + error.message);
+    }
+}
+</script>
+{% endblock %}
+

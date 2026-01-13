@@ -1,0 +1,349 @@
+{% extends "base.html" %}
+
+{% block title %}Мои портфолио - Онлайн-конструктор портфолио{% endblock %}
+
+{% block extra_css %}
+<style>
+    .portfolio-library-page {
+        min-height: calc(100vh - 56px);
+        margin-top: 56px !important;
+        padding: 2rem;
+        padding-top: 2rem !important;
+        background: #f9fafb;
+        position: relative;
+        top: 0 !important;
+    }
+    
+    /* Убедиться, что страница начинается сразу под шапкой */
+    body:not(.portfolio-editor-page) main {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+    
+    .portfolio-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+    }
+    
+    .portfolio-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .portfolio-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+    
+    .portfolio-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+    }
+    
+    .portfolio-card-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin: 0;
+        flex: 1;
+    }
+    
+    .portfolio-card-actions {
+        display: flex;
+        gap: 0.5rem;
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+    
+    .portfolio-card:hover .portfolio-card-actions {
+        opacity: 1;
+    }
+    
+    .action-btn {
+        padding: 0.375rem 0.75rem;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .action-btn-edit {
+        background: #4f46e5;
+        color: white;
+    }
+    
+    .action-btn-edit:hover {
+        background: #4338ca;
+    }
+    
+    .action-btn-duplicate {
+        background: #10b981;
+        color: white;
+    }
+    
+    .action-btn-duplicate:hover {
+        background: #059669;
+    }
+    
+    .action-btn-delete {
+        background: #ef4444;
+        color: white;
+    }
+    
+    .action-btn-delete:hover {
+        background: #dc2626;
+    }
+    
+    .portfolio-card-meta {
+        color: #6b7280;
+        font-size: 0.875rem;
+        margin-top: auto;
+        padding-top: 1rem;
+        border-top: 1px solid #e5e7eb;
+    }
+    
+    .portfolio-card-meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .empty-state-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+    }
+    
+    .empty-state-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 0.5rem;
+    }
+    
+    .empty-state-text {
+        color: #6b7280;
+        margin-bottom: 2rem;
+    }
+    
+    .toast {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        background: #10b981;
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
+        animation: slideIn 0.3s ease;
+    }
+    
+    .toast.error {
+        background: #ef4444;
+    }
+    
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="portfolio-library-page" style="margin-top: 56px !important; padding-top: 2rem;">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">Мои портфолио</h1>
+                <p class="text-gray-600 mt-1">Управляйте своими портфолио</p>
+            </div>
+            <a href="/create/" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
+                + Создать новое
+            </a>
+        </div>
+        
+        <div id="portfolio-grid" class="portfolio-grid">
+            <!-- Portfolios will be loaded here -->
+        </div>
+        
+        <div id="empty-state" class="empty-state hidden">
+            <div class="empty-state-icon">📁</div>
+            <h2 class="empty-state-title">Нет сохраненных портфолио</h2>
+            <p class="empty-state-text">Создайте свое первое портфолио, чтобы начать</p>
+            <a href="/create/" class="inline-block px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
+                Создать портфолио
+            </a>
+        </div>
+    </div>
+</div>
+
+<script src="/static/js/portfolio-service.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Прокрутить страницу на самый верх при загрузке
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    
+    // Убедиться, что body не имеет лишних отступов
+    document.body.style.marginTop = '0';
+    document.body.style.paddingTop = '0';
+    
+    // Убедиться, что контент начинается сразу под шапкой
+    const libraryPage = document.querySelector('.portfolio-library-page');
+    if (libraryPage) {
+        libraryPage.style.marginTop = '56px';
+        libraryPage.style.paddingTop = '2rem';
+    }
+    const grid = document.getElementById('portfolio-grid');
+    const emptyState = document.getElementById('empty-state');
+    
+    function showToast(message, isError = false) {
+        const toast = document.createElement('div');
+        toast.className = `toast ${isError ? 'error' : ''}`;
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.style.animation = 'slideIn 0.3s ease reverse';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+    
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('ru-RU', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
+    
+    function renderPortfolios() {
+        const portfolios = window.portfolioService.getAllPortfolios();
+        
+        if (portfolios.length === 0) {
+            grid.classList.add('hidden');
+            emptyState.classList.remove('hidden');
+            return;
+        }
+        
+        grid.classList.remove('hidden');
+        emptyState.classList.add('hidden');
+        
+        grid.innerHTML = portfolios.map(portfolio => {
+            const updatedAt = formatDate(portfolio.updatedAt);
+            const pagesCount = portfolio.pages ? portfolio.pages.length : 1;
+            const blocksCount = portfolio.blocks ? portfolio.blocks.length : 0;
+            
+            return `
+                <div class="portfolio-card" data-portfolio-id="${portfolio.id}">
+                    <div class="portfolio-card-header">
+                        <h3 class="portfolio-card-title">${portfolio.title || 'Без названия'}</h3>
+                        <div class="portfolio-card-actions">
+                            <button class="action-btn action-btn-edit" onclick="editPortfolio('${portfolio.id}')" title="Редактировать">
+                                ✏️
+                            </button>
+                            <button class="action-btn action-btn-view" onclick="viewPortfolio('${portfolio.id}')" title="Просмотр" style="background: #6366f1; color: white;">
+                                👁️
+                            </button>
+                            <button class="action-btn action-btn-duplicate" onclick="duplicatePortfolio('${portfolio.id}')" title="Дублировать">
+                                📋
+                            </button>
+                            <button class="action-btn action-btn-delete" onclick="deletePortfolio('${portfolio.id}')" title="Удалить">
+                                🗑️
+                            </button>
+                        </div>
+                    </div>
+                    <div class="portfolio-card-meta">
+                        <div class="portfolio-card-meta-item">
+                            <span>📅</span>
+                            <span>Обновлено: ${updatedAt}</span>
+                        </div>
+                        <div class="portfolio-card-meta-item">
+                            <span>📄</span>
+                            <span>Страниц: ${pagesCount}</span>
+                        </div>
+                        <div class="portfolio-card-meta-item">
+                            <span>🧩</span>
+                            <span>Блоков: ${blocksCount}</span>
+                        </div>
+                        <div class="portfolio-card-meta-item">
+                            <span>📌</span>
+                            <span>Версия: ${portfolio.version || '1.0.0'}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+    
+    window.editPortfolio = function(id) {
+        window.location.href = `/create/?portfolio=${id}`;
+    };
+    
+    window.viewPortfolio = function(id) {
+        window.open(`/view/${id}/`, '_blank');
+    };
+    
+    window.duplicatePortfolio = function(id) {
+        if (!confirm('Создать копию этого портфолио?')) return;
+        
+        try {
+            window.portfolioService.duplicatePortfolio(id);
+            showToast('Портфолио успешно скопировано');
+            renderPortfolios();
+        } catch (error) {
+            showToast('Ошибка при копировании портфолио', true);
+            console.error(error);
+        }
+    };
+    
+    window.deletePortfolio = function(id) {
+        if (!confirm('Вы уверены, что хотите удалить это портфолио? Это действие нельзя отменить.')) return;
+        
+        try {
+            window.portfolioService.deletePortfolio(id);
+            showToast('Портфолио удалено');
+            renderPortfolios();
+        } catch (error) {
+            showToast('Ошибка при удалении портфолио', true);
+            console.error(error);
+        }
+    };
+    
+    // Initial render
+    renderPortfolios();
+});
+</script>
+{% endblock %}
+
