@@ -13,4 +13,3 @@ Write-Host "Press Ctrl+C to stop the server" -ForegroundColor Yellow
 Write-Host ""
 
 & "venv\Scripts\python.exe" manage.py runserver
-

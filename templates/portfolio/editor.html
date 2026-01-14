@@ -690,6 +690,7 @@
                                            class="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg color-hex-input focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" 
                                            pattern="^#[0-9A-Fa-f]{6}$" placeholder="#RRGGBB">
                                 </div>
+                                <!-- Django template syntax in style attribute - lint errors are false positives -->
                                 <div id="background-preview" class="mt-2 h-8 rounded border border-gray-200" style="background: {% if portfolio.color_scheme and portfolio.color_scheme.background_color %}{{ portfolio.color_scheme.background_color }}{% else %}#ffffff{% endif %};"></div>
                             </div>
                             <div>
@@ -708,6 +709,7 @@
                                            class="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg color-hex-input focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" 
                                            pattern="^#[0-9A-Fa-f]{6}$" placeholder="#RRGGBB">
                                 </div>
+                                <!-- Django template syntax in style attribute - lint errors are false positives -->
                                 <div id="gradient-preview" class="mt-2 h-8 rounded border border-gray-200" style="background: linear-gradient(135deg, {% if portfolio.color_scheme and portfolio.color_scheme.background_color %}{{ portfolio.color_scheme.background_color }}{% else %}#ffffff{% endif %} 0%, {% if portfolio.color_scheme and portfolio.color_scheme.background_color_2 %}{{ portfolio.color_scheme.background_color_2 }}{% else %}#f3f4f6{% endif %} 100%);"></div>
                             </div>
                             <div class="border-t border-gray-200 pt-3 mt-3">
@@ -720,6 +722,7 @@
                                            class="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg color-hex-input focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" 
                                            pattern="^#[0-9A-Fa-f]{6}$" placeholder="#RRGGBB">
                                 </div>
+                                <!-- Django template syntax in style attribute - lint errors are false positives -->
                                 <div id="card-background-preview" class="mt-2 h-8 rounded border border-gray-200" style="background: {% if portfolio.color_scheme and portfolio.color_scheme.card_background %}{{ portfolio.color_scheme.card_background }}{% else %}#374151{% endif %};"></div>
                             </div>
                         </div>
@@ -950,6 +953,7 @@
                                             <span class="text-xs text-gray-500">{{ item.category }}</span>
                                             {% endif %}
                                         </div>
+                                        <!-- Django template syntax in onclick - lint errors are false positives -->
                                         <div class="flex gap-1">
                                             <button onclick="editItem({{ forloop.counter0 }})" class="px-2 py-1 text-blue-600 hover:text-blue-800 text-xs" title="Редактировать" type="button">✏️</button>
                                             <button onclick="removeItem({{ forloop.counter0 }})" class="px-2 py-1 text-red-600 hover:text-red-800 text-xs" title="Удалить" type="button">×</button>
@@ -1293,6 +1297,8 @@
 <script src="/static/js/portfolio-export.js"></script>
 <script src="/static/js/portfolio-renderer.js"></script>
 <script>
+// Django template syntax in JavaScript - lint errors are false positives
+/* eslint-disable */
 let selectedTemplate = {% if portfolio.template %}{{ portfolio.template.id }}{% else %}null{% endif %};
 let customColors = {
     primary: {% if portfolio.color_scheme and portfolio.color_scheme.primary_color %}'{{ portfolio.color_scheme.primary_color|escapejs }}'{% else %}'#4f46e5'{% endif %},
@@ -3468,6 +3474,7 @@ function initSortable() {
 
 async function reorderItems(itemIds) {
     try {
+        // Django template syntax in JavaScript - lint errors are false positives
         const portfolioId = {% if portfolio.id %}{{ portfolio.id }}{% else %}null{% endif %};
         if (!portfolioId) {
             console.warn('Portfolio ID не найден, порядок не сохранен');
