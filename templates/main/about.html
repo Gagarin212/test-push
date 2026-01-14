@@ -2,8 +2,26 @@
 
 {% block title %}О нас - Онлайн-конструктор портфолио{% endblock %}
 
+{% block extra_css %}
+<style>
+    /* Set page background to white for About page only */
+    body {
+        background-color: #ffffff !important;
+    }
+    /* Remove gradient from page wrapper, ensure white background shows through */
+    #main-content > div.fade-in-section:first-child {
+        background: transparent !important;
+        background-color: transparent !important;
+    }
+    /* Ensure main content area has white background */
+    #main-content {
+        background-color: #ffffff !important;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="bg-gradient-to-br from-indigo-50 via-white to-purple-50 min-h-screen fade-in-section">
+<div class="min-h-screen fade-in-section">
     <!-- Hero Section -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div class="text-center">
